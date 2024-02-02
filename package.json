@@ -1,0 +1,15 @@
+{
+  "name": "wc-recipes",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+      "@cooklang/cooklang-ts": "1.2.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
