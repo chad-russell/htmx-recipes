@@ -1,8 +1,6 @@
 // TODO:
 //
-// styling
-// hover
-// checkboxes for ingredients/steps
+// checkboxes for ingredients/steps w/ styling
 // support fractions (?)
 //
 
@@ -11,38 +9,43 @@ import { Recipe, type Ingredient, type Step, type Timer, type Cookware, type Tex
 
 function ingredient(ingredient: Ingredient): string {
     return `
-        <li 
-            x-data='{ quantity: "${ingredient.quantity}", originalQuantity: "${ingredient.quantity}" }'
-            x-on:mousedown='
-                if (!quantity) { return; }
-                let start = event.clientX;
-                let startQuantity = scaleQuantity(quantity, scale);
-                const mousemove = (event) => {
-                    if (isNaN(Number(quantity))) {
-                        return;
-                    }
-                    let diff = (event.clientX - start) * 0.1;
-                    let newQuantity = Number(startQuantity) + diff;
-                    newQuantity = Math.max(newQuantity, 0.1 * startQuantity);
-                    scale = newQuantity / Number(originalQuantity);
-                };
-                const mouseup = () => {
-                    window.removeEventListener("mousemove", mousemove);
-                    window.removeEventListener("mouseup", mouseup);
-                };
-                window.addEventListener("mousemove", mousemove);
-                window.addEventListener("mouseup", mouseup);
-            '
-            class='select-none'>
-            ${ingredient.name}: <span x-text="scaleQuantity(quantity, scale)"></span> ${ingredient.units}
+        <li class='select-none ml-6 mt-2 flex flex-row items-center'>
+            <input type='checkbox' class="h-6 w-6 rounded-md shadow" />
+            <div class='flex flex-row ml-1'
+                x-data='{ quantity: "${ingredient.quantity}", originalQuantity: "${ingredient.quantity}" }'
+                x-on:mousedown='
+                    if (!quantity) { return; }
+                    let start = event.clientX;
+                    let startQuantity = scaleQuantity(quantity, scale);
+                    const mousemove = (event) => {
+                        if (isNaN(Number(quantity))) {
+                            return;
+                        }
+                        let diff = (event.clientX - start) * 0.1;
+                        let newQuantity = Number(startQuantity) + diff;
+                        newQuantity = Math.max(newQuantity, 0.1 * startQuantity);
+                        scale = newQuantity / Number(originalQuantity);
+                    };
+                    const mouseup = () => {
+                        window.removeEventListener("mousemove", mousemove);
+                        window.removeEventListener("mouseup", mouseup);
+                    };
+                    window.addEventListener("mousemove", mousemove);
+                    window.addEventListener("mouseup", mouseup);
+                '
+            >
+                <span class='ml-1'>${ingredient.name}:</span>
+                <span x-text="scaleQuantity(quantity, scale)" class='ml-1 text-slate-400 italic'></span>
+                <span class='ml-1 text-slate-400 italic'>${ingredient.units}</span>
+            </div>
         </li>
     `;
 }
 
 function ingredients(recipe: Recipe): string {
     return `
-        <h4>Ingredients:</h4>
-        <ul x-data='{ scale: 1.0 }'>
+        <h4 class='text-3xl ml-6 mt-10'>Ingredients</h4>
+        <ul>
             ${recipe.ingredients.map((i) => ingredient(i)).join('\n')}
         </ul>
     `;
@@ -51,11 +54,15 @@ function ingredients(recipe: Recipe): string {
 function stepPart(sp: Ingredient | Cookware | Timer | Text): string {
     if (sp.type === 'ingredient') {
         return `
-            <div class='has-tooltip bg-orange-100 bg-opacity-20 px-1 rounded-md text-orange-300 text-nowrap'>
+            <div 
+                class='has-tooltip bg-orange-100 bg-opacity-20 px-1 rounded-md text-orange-300 text-nowrap'
+                x-data='{ quantity: "${sp.quantity}" }'
+            >
                 ${sp.name}
-                 <span class="tooltip rounded shadow-lg p-1 text-red-600">
-                     ${sp.quantity} ${sp.units}
-                 </span>
+                <span class='tooltip rounded shadow-lg p-1 text-red-600'>
+                    <span x-text='scaleQuantity(quantity, scale)'></span>
+                    <span>${sp.units}</span>
+                </span>
             </div>
         `;
     } else if (sp.type === 'cookware') {
@@ -83,7 +90,8 @@ function stepPart(sp: Ingredient | Cookware | Timer | Text): string {
 
 function step(s: Step): string {
     return `
-        <div class='bg-gray-800 rounded-lg shadow-lg px-4 py-6 my-5 mx-4'>
+        <div class='bg-gray-800 rounded-lg shadow-lg px-4 py-6 my-5 mx-4 flex flex-row'>
+            <input type='checkbox' class='h-6 w-6 mr-3 rounded-md shadow' />
             <li class='flex flex-row flex-wrap'>${s.map(sp => stepPart(sp)).join('')}</li>
         </div>
     `;
@@ -91,7 +99,7 @@ function step(s: Step): string {
 
 function method(recipe: Recipe): string {
     return `
-        <h4>Method:</h4>
+        <h4 class='text-3xl ml-6 mt-10'>Method</h4>
         <ol>
             ${recipe.steps.map((s) => step(s)).join('')}
         </ol>
@@ -156,8 +164,8 @@ Bun.serve({
                     <link rel='stylesheet' href='/static/css/style.css'>
                     <script src='//unpkg.com/alpinejs' defer></script>
                 </head>
-                <body class='bg-black text-white'>
-                    <h3 class='bg-blue-300'>${title}:</h3>
+                <body class='bg-black text-slate-100' x-data='{ scale: 1.0 }'>
+                    <h3 class='text-5xl ml-6 mt-10'>${title}</h3>
                     ${ingredients(recipe)}
                     ${method(recipe)}
                     <script>
