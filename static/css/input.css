@@ -14,20 +14,10 @@
   @apply visible z-50 bottom-[104%] left-1/2 transform -translate-x-1/2 opacity-85 bg-neutral-800 text-neutral-100 p-2 rounded-md;
 }
 
-div.rcp-list-ingredient.complete > * {
-    @apply text-neutral-400;
-    @apply opacity-35;
+li.rcp-ingredient:has(input:checked) {
+  @apply text-neutral-400 opacity-35;
 }
 
-div.rcp-step.complete {
-    @apply opacity-35;
-    @apply text-neutral-400;
-}
-
-div.rcp-step.complete > div#children > span.rcp-step-ingredient > span {
-    @apply text-neutral-400;
-}
-
-div.rcp-step.complete > div#children > :is(span.rcp-step-cookware, span.rcp-step-timer) {
-    @apply text-neutral-400;
+div.rcp-step:has(input:checked) {
+  @apply text-neutral-400 opacity-35;
 }

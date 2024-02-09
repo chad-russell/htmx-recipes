@@ -9,7 +9,7 @@ import { Recipe, type Ingredient, type Step, type Timer, type Cookware, type Tex
 
 function ingredient(ingredient: Ingredient): string {
     return `
-        <li class='select-none ml-6 mt-2 flex flex-row items-center'>
+        <li class='rcp-ingredient select-none ml-6 mt-2 flex flex-row items-center'>
             <input type='checkbox' class="h-6 w-6 rounded-md shadow" />
             <div class='flex flex-row ml-1'
                 x-data='{ quantity: "${ingredient.quantity}", originalQuantity: "${ingredient.quantity}" }'
@@ -90,7 +90,7 @@ function stepPart(sp: Ingredient | Cookware | Timer | Text): string {
 
 function step(s: Step): string {
     return `
-        <div class='bg-gray-800 rounded-lg shadow-lg px-4 py-6 my-5 mx-4 flex flex-row'>
+        <div class='rcp-step bg-gray-800 rounded-lg shadow-lg px-4 py-6 my-5 mx-4 flex flex-row'>
             <input type='checkbox' class='h-6 w-6 mr-3 rounded-md shadow' />
             <li class='flex flex-row flex-wrap'>${s.map(sp => stepPart(sp)).join('')}</li>
         </div>
