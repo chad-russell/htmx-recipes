@@ -30,7 +30,6 @@ FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/index.ts .
 COPY --from=prerelease /usr/src/app/static .
-COPY --from=prerelease /usr/src/app/recipes .
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
