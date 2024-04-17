@@ -1,6 +1,6 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 as base
+FROM oven/bun:latest as base
 WORKDIR /usr/src/app
 
 # install dependencies into temp directory
@@ -28,6 +28,7 @@ COPY --from=prerelease /usr/src/app/index.ts .
 COPY --from=prerelease /usr/src/app/static static
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/recipes recipes
+COPY --from=prerelease /usr/src/app/cooklang cooklang
 
 # run the app
 USER bun
